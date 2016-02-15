@@ -29,7 +29,8 @@ class load_data:
         print(grouped.sort_values(['CSPL_CALLS'], ascending = [0]))
         self.data = grouped
 
+
 if __name__ == "__main__":
-    data = load_data()
-    data.data.to_csv('../../data/preprocessed_data.csv', sep=";")
+    loader = load_data()
+    loader.data.to_csv('../../data/preprocessed_data.csv', sep=";")
 
