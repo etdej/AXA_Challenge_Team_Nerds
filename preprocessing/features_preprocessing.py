@@ -1,5 +1,6 @@
 import pandas as pd
 import time
+from configuration import CONFIG
 
 def date_reducer(date):
     parsedTime =  time.strptime(date, "%Y-%m-%d %H:%M:%S.000")
@@ -21,33 +22,40 @@ class feature_preprocessing():
         #self.data = self.data.reset_index()
 
     def date_vector(self):
-        self.year['YEAR'] = self.data['DATE'].apply(lambda x: x[0])
-        self.data['MONTH'] = self.data ["DATE"].apply(lambda x: x[1])
+        self.data['YEAR'] = self.data['DATE'].apply(lambda x: x[0])
+        self.data['MONTH'] = self.data['DATE'].apply(lambda x: x[1])
+
+        for key, month in CONFIG.months.items():
+            self.data[month] = self.data['MONTH'].apply(lambda x: int(x == key))
         self.data['TIME'] = self.data ["DATE"].apply(lambda x: x[3])
 
     def week_day_to_vector(self):
-        days = {1: "MONDAY", 2: "TUESDAY", 3: "WEDNESDAY", 4: "THURSDAY", 5: 'FRIDAY', 6: "SATURDAY", 0: "SUNDAY"}
-        print(days)
-        for key,day in days.items():
+        for key,day in CONFIG.days.items():
             self.data[day] = self.data['WEEK_DAY'].apply(lambda x: int(x == key))
 
     def ass_assignement_to_vector(self):
         assignments = self.data['ASS_ASSIGNMENT'].unique()
+        print(list(assignments))
         for ass in assignments:
             self.data[ass] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(x == ass))
 
-    def full_preprocess(self):
+    def full_preprocess(self, used_columns = CONFIG.default_columns, keep_all = False, remove_columns = []):
         self.preprocess_date()
         self.date_vector()
         self.week_day_to_vector()
-        self.data = pp.data.drop(['DATE', 'DAY_OFF'], axis=1)
-        #self.data = self.data.drop(['WEEK_DAY'], axis=1)
         self.ass_assignement_to_vector()
+        #self.data = self.data.drop(['DATE', 'DAY_OFF', 'YEAR'], axis=1)
+        #self.data = self.data.drop(['WEEK_DAY'], axis=1)
+
+        if not keep_all:
+            self.data = self.data[used_columns]
+        else:
+            self.data = self.data.drop(remove_columns, axis=1)
 
 if __name__ == "__main__":
     pp = feature_preprocessing()
     pp.full_preprocess()
     print(pp.data.columns)
-    print(pp.data[['WEEK_DAY', 'MONTH', 'CSPL_CALLS', 'ASS_ASSIGNMENT']].sort_values(by=['CSPL_CALLS'], ascending=[0]))
+    print(pp.data.sort_values(by=['CSPL_CALLS'], ascending=[0]))
 
 
