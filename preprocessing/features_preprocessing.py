@@ -13,7 +13,7 @@ def date_reducer(date):
 class feature_preprocessing():
 
     def __init__(self):
-        self.data = pd.read_csv("../../data/preprocessed_data.csv", sep=";", nrows=1000)
+        self.data = pd.read_csv("../../data/preprocessed_data.csv", sep=";", nrows=10000)
 
 
     def preprocess_date(self):
