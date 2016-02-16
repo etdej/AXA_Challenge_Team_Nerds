@@ -26,6 +26,8 @@ class load_data:
         data = data.drop(['DAY_DS', 'WEEK_END', 'DAY_WE_DS'], axis = 1)
         grouped = data.groupby(['DATE', 'ASS_ASSIGNMENT', 'DAY_OFF', 'WEEK_DAY']).sum()
 
+        print(data['DATE' == '2011-01-01%'])
+        daysoff = data['DAY_OFF'].unique()
         print(grouped.sort_values(['CSPL_CALLS'], ascending = [0]))
         self.data = grouped
 
