@@ -21,6 +21,7 @@ class feature_preprocessing():
         #self.data = self.data.reset_index()
 
     def date_vector(self):
+        self.year['YEAR'] = self.data['DATE'].apply(lambda x: x[0])
         self.data['MONTH'] = self.data ["DATE"].apply(lambda x: x[1])
         self.data['TIME'] = self.data ["DATE"].apply(lambda x: x[3])
 
