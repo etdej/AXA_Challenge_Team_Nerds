@@ -10,7 +10,7 @@ def date_reducer(date):
     return (year,month,day)
     
 def get_week_day(date):    
-    return datetime.datetime(date[0],date[1],date[2]).weekday()+1
+    return (datetime.datetime(date[0],date[1],date[2]).weekday()+1)%7
     
 class submission_preprocessing():
 
@@ -33,7 +33,8 @@ class submission_preprocessing():
 
         self.data = self.data.drop(['WEEK_DAY'], axis = 1)
         
-if __name__ == "__main__":
+if __name__ == "__main__":    
     pp = submission_preprocessing()
     pp.preprocess_date()
     pp.transform_week_day_to_vector()
+    df = pp.data
