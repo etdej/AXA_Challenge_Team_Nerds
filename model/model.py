@@ -31,9 +31,7 @@ predict = clf.predict(X_test)
 
 result = predict-Y_test
 
-Error= pd.Series(result).apply(lambda x:x*x)
-print("R^2 calculated manually")
-print(Error.sum(axis=0))
+
 
 #AdaboostRegression
 
@@ -41,4 +39,4 @@ clf2 = AdaBoostRegressor(n_estimators=100)
 clf2.fit(X_train,Y_train)
 predict_2 = clf2.predict(X_test)
 print(clf2.score(X_test,Y_test))
-print(pd.Series(predict_2-Y_test))
+
