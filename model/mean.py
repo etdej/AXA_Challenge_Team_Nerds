@@ -33,9 +33,9 @@ for i in range(X_train.shape[0]):
         print score/i
 
 
+
 score = score/X_train.shape[0]
 print(score)
-
 
 #clf = svm.SVR(kernel='poly', degree=3)
 #scores = cross_validation.cross_val_score(clf, X_train, Y_train, cv=2)
