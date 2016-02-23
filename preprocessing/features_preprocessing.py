@@ -51,7 +51,7 @@ class feature_preprocessing():
             self.data = self.data[used_columns]
         else:
             self.data = self.data.drop(remove_columns, axis=1)
-            
+
 if __name__ == "__main__":
     pp = feature_preprocessing()
     pp.full_preprocess()
