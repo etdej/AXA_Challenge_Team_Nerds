@@ -13,7 +13,7 @@ def date_reducer(date):
 class feature_preprocessing():
 
     def __init__(self):
-        self.data = pd.read_csv("../../data/preprocessed_data.csv", sep=";", nrows=10000)
+        self.data = pd.read_csv("../../data/preprocessed_data.csv", sep=";")
 
 
     def preprocess_date(self):
@@ -35,7 +35,6 @@ class feature_preprocessing():
 
     def ass_assignement_to_vector(self):
         assignments = self.data['ASS_ASSIGNMENT'].unique()
-        print(list(assignments))
         for ass in assignments:
             self.data[ass] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(x == ass))
 

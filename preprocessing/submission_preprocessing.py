@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import datetime
+from configuration import _Config
 
 def date_reducer(date):
     parsedTime = time.strptime(date,"%Y-%m-%d %H:%M:%S.000")
@@ -26,10 +27,8 @@ class submission_preprocessing():
         #self.data = self.data.reset_index()
 
     def transform_week_day_to_vector(self):
-        days = { 1: "MONDAY", 2:"TUESDAY", 3:"WEDNESDAY", 4:"THURSDAY", 5:'FRIDAY', 6:"SATURDAY", 0:"SUNDAY"}
-        #print(days)
-        for key,day in days.items():
-            self.data[day]= self.data['WEEK_DAY'].apply(lambda x: int(x == key))
+        for key,day in _Config.days.items():
+            self.data[day] = self.data['WEEK_DAY'].apply(lambda x: int(x == key))
 
         self.data = self.data.drop(['WEEK_DAY'], axis = 1)
         
