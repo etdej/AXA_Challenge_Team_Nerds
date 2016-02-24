@@ -21,7 +21,7 @@ class submission_preprocessing():
         self.data = pd.read_csv("../../data/submission.txt", sep="\t")
 
     def preprocess_date(self):
-        self.data["DATE"] = self.data ["DATE"].apply(date_reducer)
+        self.data["DATE"] = self.data["DATE"].apply(date_reducer)
         self.data["WEEK_DAY"] = self.data["DATE"].apply(get_week_day)
         
     def date_vector(self):
@@ -30,16 +30,14 @@ class submission_preprocessing():
 
         for key, month in CONFIG.months.items():
             self.data[month] = self.data['MONTH'].apply(lambda x: int(x == key))
-        self.data['TIME'] = self.data ["DATE"].apply(lambda x: x[3])
+        self.data['TIME'] = self.data["DATE"].apply(lambda x: x[3])
 
     def transform_week_day_to_vector(self):
-        for key,day in _Config.days.items():
+        for key,day in CONFIG.days.items():
             self.data[day] = self.data['WEEK_DAY'].apply(lambda x: int(x == key))
-
-        self.data = self.data.drop(['WEEK_DAY'], axis = 1)
         
     def ass_assignement_to_vector(self):
-        assignments =  CONFIG.ass_assign
+        assignments = CONFIG.ass_assign
         for ass in assignments:
             self.data[ass] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(x == ass))    
         
@@ -50,7 +48,7 @@ class submission_preprocessing():
         self.ass_assignement_to_vector()
         #self.data['CSPL_CALLS'] = self.data['prediction'] 
         self.data = self.data.rename(columns = {'prediction':'CSPL_CALLS'})
-        
+
         if not keep_all:
             self.data = self.data[used_columns]
         else:
