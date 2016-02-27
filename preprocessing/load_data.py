@@ -23,8 +23,10 @@ class load_data:
         data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns)
         week_day = data['DAY_WE_DS'].map(lambda day: find_day(day))
         data['WEEK_DAY'] = week_day
-        data = data.drop(['DAY_DS', 'WEEK_END', 'DAY_WE_DS'], axis = 1)
-        grouped = data.groupby(['DATE', 'ASS_ASSIGNMENT', 'DAY_OFF', 'WEEK_DAY']).sum()
+        data['ASS_ID'] = data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
+        data = data.drop(['ASS_ASSIGNMENT', 'DAY_WE_DS', 'WEEK_END'], axis = 1)
+        data = data.query('ASS_ID not in [52, 10, 13, 38, 16, 37]')
+        grouped = data.groupby(['DATE', 'ASS_ID', 'DAY_OFF', 'WEEK_DAY']).sum()
         self.data = grouped
 
 
