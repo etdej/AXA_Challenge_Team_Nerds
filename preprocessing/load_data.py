@@ -78,18 +78,22 @@ class load_data:
 
     def __init__(self):
         data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns)
+        print(data.columns)
         week_day = data['DAY_WE_DS'].map(lambda day: find_day(day))
         data['WEEK_DAY'] = week_day
+        print(data.columns)
         data['ASS_ID'] = data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
-        data = data.drop(['ASS_ASSIGNMENT', 'DAY_WE_DS', 'WEEK_END'], axis = 1)
+        data = data.drop(['ASS_ASSIGNMENT', 'DAY_WE_DS', 'WEEK_END'], axis=1)
+        print(data.columns)
         data = data.query('ASS_ID not in [52, 10, 13, 38, 16, 37]')
-        grouped = data.groupby(['DATE', 'ASS_ID', 'DAY_OFF', 'WEEK_DAY']).sum()
-        self.data = grouped
+        print(data.columns)
+        self.data = data.groupby(['DATE', 'ASS_ID', 'DAY_OFF', 'WEEK_DAY'], sort=False).sum().reset_index()
+        print(self.data.columns)
 
 
     def add_day_off(self):
         self.data['YEAR_DAY_AND_YEAR'] = self.data['DATE'].apply(lambda date: get_year_day(date))
-        self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0],date[1]))
+        self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0], date[1]))
         self.data['DAY_OFF'] = self.data['DAY_DS'].apply(lambda label: int(label != "nan"))
         
 
@@ -97,11 +101,3 @@ if __name__ == "__main__":
     loader = load_data()
     loader.add_day_off()
     loader.data.to_csv('../../data/preprocessed_data.csv', sep=";")
-    data_loaded = loader.data
-
-    print(sum((data_loaded['CSPL_CALLS'] > 10) * data_loaded['WEEK_END']))
-    print(sum((data_loaded['CSPL_CALLS'] > 10))/7*2)
-    print(sum(data_loaded['CSPL_CALLS'] > 50))
-    print(sum(data_loaded['CSPL_CALLS'] > 10))
-    
-    loader.add_day_off();

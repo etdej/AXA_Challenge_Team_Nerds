@@ -26,10 +26,10 @@ class submission_postprocess():
         
         self.data["DATE"] = self.data["DATE"].apply(date_reducer)
         
-    def premier_submit(self,pred):
+    def premier_submit(self,pred, name="result_submission_axa.txt"):
         self.data = pd.read_csv("../../data/submission.txt", sep="\t")
         self.data['prediction'] = pred
-        self.data.to_csv("result_submission_axa.txt", sep='\t', encoding='utf-8', index=False)
+        self.data.to_csv(name, sep='\t', encoding='utf-8', index=False)
     
 if __name__ == "__main__":  
     print(0)
