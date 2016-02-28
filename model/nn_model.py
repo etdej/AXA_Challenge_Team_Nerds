@@ -25,7 +25,7 @@ y_train = y_train.reshape( -1, 1 )
 input_size = x_train.shape[1]
 target_size = y_train.shape[1]
 hidden_size = 100
-epochs = 20
+epochs = 7200
 
 ds = SDS(input_size,target_size)
 

@@ -11,32 +11,30 @@ from sklearn.ensemble import AdaBoostRegressor
 import pandas as pd
 from sklearn import linear_model
 
-data_preprocessing = fp.feature_preprocessing()
-data_preprocessing.full_preprocess()
-submission = sp.submission_preprocessing()
-submission.full_preprocess()
+preprocessing = fp.feature_preprocessing()
+preprocessing.full_preprocess(used_columns=['ASS_ID', 'WEEK_DAY', 'TIME', 'CSPL_RECEIVED_CALLS'])
+data = preprocessing.data[:100000]
+Y = data['CSPL_RECEIVED_CALLS']
+X = data.drop(['CSPL_RECEIVED_CALLS'], axis=1)
 
 
-data = data_preprocessing.data
-data_to_predict = submission.data
-Y_to_predict = data_to_predict['CSPL_CALLS']
-X_used_for_prediction = data_to_predict.drop(['CSPL_CALLS'],axis=1)
-Y = data['CSPL_CALLS']
-X= data.drop(['CSPL_CALLS'], axis=1)
+
+Y = data['CSPL_RECEIVED_CALLS']
+X= data.drop(['CSPL_RECEIVED_CALLS'], axis=1)
 X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(X, Y, test_size=0.4, random_state=0)
 
 #RandomForest
 
 
-clf = RandomForestRegressor(n_estimators=100, oob_score=True)
+clf = RandomForestRegressor(n_estimators=1000, oob_score=True)
 clf.fit(X_train,Y_train)
 print(clf.score(X_test,Y_test))
 scores = cross_val_score(clf, X ,Y)
 
-predict = clf.predict(X_used_for_prediction)
+
 
 postprocess = pp.submission_postprocess()
-postprocess.premier_submit(predict)
+
 
 
 
