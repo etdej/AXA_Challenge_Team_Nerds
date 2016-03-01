@@ -36,18 +36,17 @@ class feature_preprocessing():
             self.data[day] = self.data['WEEK_DAY'].apply(lambda x: int(x == key))
 
     def ass_assignement_to_vector(self):
-        #assignments = self.data['ASS_ASSIGNMENT'].unique()
-        #print(list(assignments))
-        #for ass in assignments:
-        #    self.data[ass] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(x == ass))
+        ids = self.data['ASS_ID'].unique()
+        for id in ids:
+            self.data[id]= self.data['ASS_ID'].apply(lambda x: int(x==id))
 
-        self.data['ASS_ID'] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
+        #self.data['ASS_ID'] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
 
     def full_preprocess(self, used_columns=CONFIG.default_columns, keep_all = False, remove_columns = []):
         self.preprocess_date()
         self.date_vector()
         self.week_day_to_vector()
-        #self.ass_assignement_to_vector()
+        self.ass_assignement_to_vector()
         #self.data = self.data.drop(['DATE', 'DAY_OFF', 'YEAR'], axis=1)
         #self.data = self.data.drop(['WEEK_DAY'], axis=1)
 
@@ -60,12 +59,11 @@ class feature_preprocessing():
 
 if __name__ == "__main__":
     pp = feature_preprocessing()
-    pp.full_preprocess(['DATE', 'WEEK_DAY', 'MONTH', 'TIME', 'ASS_ASSIGNMENT', 'ASS_ID']+['CSPL_RECEIVED_CALLS','CSPL_CALLS'])
+    pp.full_preprocess(keep_all=True)
     print()
-    tel = pp.data.query('ASS_ID == 35')
-    print()
-    tel.to_csv('tel.csv', sep=';')
-    #print(pp.data.columns)
+
+
+    print(pp.data)
     #print(pp.data.sort_values(by=['CSPL_CALLS'], ascending=[0]))
 
 

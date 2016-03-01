@@ -77,7 +77,7 @@ def find_day_off(year_day, year):
 class load_data:
 
     def __init__(self):
-        data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns)
+        data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns, nrows=100000)
         print(data.columns)
         week_day = data['DAY_WE_DS'].map(lambda day: find_day(day))
         data['WEEK_DAY'] = week_day

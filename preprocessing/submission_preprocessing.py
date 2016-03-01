@@ -47,11 +47,11 @@ class submission_preprocessing():
     def full_preprocess(self, used_columns = CONFIG.default_columns, keep_all = False, remove_columns = []):
         self.preprocess_date()
         self.date_vector()
-        #self.transform_week_day_to_vector()
+        self.transform_week_day_to_vector()
         self.data['ASS_ID'] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
         #self.ass_assignement_to_vector()
         #self.data['CSPL_CALLS'] = self.data['prediction'] 
-        self.data = self.data.rename(columns = {'prediction':'CSPL_CALLS'})
+        self.data = self.data.rename(columns = {'prediction':'CSPL_RECEIVED_CALLS'})
 
         if not keep_all:
             self.data = self.data[used_columns]
