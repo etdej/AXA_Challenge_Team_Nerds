@@ -16,16 +16,16 @@ from math import sqrt
 output_predictions_file = 'predictions.txt'
 
 preprocessing = fp.feature_preprocessing()
-preprocessing.full_preprocess()
-print(len(preprocessing.data.columns))
-train = np.asarray(preprocessing.data)
+preprocessing.full_preprocess(keep_all=True)
+print(preprocessing.data.columns)
+train = np.asarray(preprocessing.data.drop(['DAY_DS','YEAR_DAY_AND_YEAR'],axis=1)[:10])
 x_train = train[:,0:-1]
 y_train = train[:,-1]
 y_train = y_train.reshape( -1, 1 )
 input_size = x_train.shape[1]
 target_size = y_train.shape[1]
 hidden_size = 100
-epochs = 7200
+epochs = 600
 
 ds = SDS(input_size,target_size)
 

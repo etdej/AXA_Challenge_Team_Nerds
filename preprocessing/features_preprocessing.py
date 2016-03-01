@@ -63,7 +63,7 @@ if __name__ == "__main__":
     print()
 
 
-    print(pp.data)
+    print(pp.data.drop(['DAY_DS'],axis=1).columns)
     #print(pp.data.sort_values(by=['CSPL_CALLS'], ascending=[0]))
 
 

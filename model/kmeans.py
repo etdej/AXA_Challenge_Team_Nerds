@@ -41,7 +41,5 @@ print('fitted')
 
 #print(error)
 
-y_pred = neigh.predict(X_test,verbose=True)
+y_pred = neigh.predict(X_test)
 
-print(np.spatial.distance.sqeuclidean(y_pred, y_test))
-print(np.array(data.iloc[0]))
