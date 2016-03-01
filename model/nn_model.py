@@ -17,8 +17,10 @@ output_predictions_file = 'predictions.txt'
 
 preprocessing = fp.feature_preprocessing()
 preprocessing.full_preprocess(keep_all=True)
+loaded_data=preprocessing.data[:10]
+loaded_data.drop(['DATE','ASS_ID','YEAR_DAY_AND_YEAR','DAY_DS','MONTH'], axis=1)
 print(preprocessing.data.columns)
-train = np.asarray(preprocessing.data.drop(['DAY_DS','YEAR_DAY_AND_YEAR'],axis=1)[:10])
+train = np.asarray(loaded_data)
 x_train = train[:,0:-1]
 y_train = train[:,-1]
 y_train = y_train.reshape( -1, 1 )
