@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import datetime
+from load_data import get_year_day, find_day_off
 from configuration import CONFIG
 
 def date_reducer(date):
@@ -23,6 +24,7 @@ class submission_preprocessing():
         self.data = pd.read_csv("../../data/submission.txt", sep="\t")
 
     def preprocess_date(self):
+        self.add_day_off()
         self.data["DATE"] = self.data["DATE"].apply(date_reducer)
         self.data["WEEK_DAY"] = self.data["DATE"].apply(get_week_day)
         
@@ -43,7 +45,12 @@ class submission_preprocessing():
         for ass in assignments:
             self.data[ass] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(x == ass))
         self.data['ASS_ID'] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
-
+        
+    def add_day_off(self):
+        self.data['YEAR_DAY_AND_YEAR'] = self.data['DATE'].apply(lambda date: get_year_day(date))
+        self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0], date[1]))
+        self.data['DAY_OFF'] = self.data['DAY_DS'].apply(lambda label: int(label != "nan"))
+        
     def full_preprocess(self, used_columns = CONFIG.default_columns, keep_all = False, remove_columns = []):
         self.preprocess_date()
         self.date_vector()
@@ -60,6 +67,7 @@ class submission_preprocessing():
         
 if __name__ == "__main__":    
     pp = submission_preprocessing()
-    pp.full_preprocess(used_columns = CONFIG.default_columns[:])
+    pp.full_preprocess(used_columns = CONFIG.default_columns[:], keep_all=True)
     submission_data = pp.data
+   # pp.add_day_off()
     print(submission_data.columns)
