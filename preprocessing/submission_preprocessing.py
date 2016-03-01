@@ -51,13 +51,18 @@ class submission_preprocessing():
         self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0], date[1]))
         self.data['DAY_OFF'] = self.data['DAY_DS'].apply(lambda label: int(label != "nan"))
         
+    def ass_assignement_to_vector(self):
+        ids = self.data['ASS_ID'].unique()
+        for id in ids:
+            self.data[id]= self.data['ASS_ID'].apply(lambda x: int(x==id))
+            
     def full_preprocess(self, used_columns = CONFIG.default_columns, keep_all = False, remove_columns = []):
         self.preprocess_date()
         self.date_vector()
         self.transform_week_day_to_vector()
         self.data['ASS_ID'] = self.data['ASS_ASSIGNMENT'].apply(lambda x: int(CONFIG.ass_assign[x]))
-        #self.ass_assignement_to_vector()
-        #self.data['CSPL_CALLS'] = self.data['prediction'] 
+        self.ass_assignement_to_vector()
+        self.data['CSPL_CALLS'] = self.data['prediction'] 
         self.data = self.data.rename(columns = {'prediction':'CSPL_RECEIVED_CALLS'})
 
         if not keep_all:
