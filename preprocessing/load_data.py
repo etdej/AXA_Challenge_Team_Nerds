@@ -74,6 +74,11 @@ def find_day_off(year_day, year):
         else:
             return "nan"
     
+def normalize(df, column):  
+        moyenne = df[column].mean()
+        var = (((df[column] - moyenne)**2).mean())**0.5
+        df[column] = df[column].apply(lambda pre: (pre - moyenne)/(var))
+    
 class load_data:
 
     def __init__(self):
@@ -91,9 +96,27 @@ class load_data:
         print(self.data.columns)
 
     def add_weather_data(self):
-        self.weather_2011 = pd.read_csv("../../data/meteo/meteo_2011.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'], nrows=100)
-        self.weather_2012 = pd.read_csv("../../data/meteo/meteo_2012.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'], nrows=100)
-    
+        self.weather_2011 = pd.read_csv("../../data/meteo/meteo_2011.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'])
+        self.weather_2012 = pd.read_csv("../../data/meteo/meteo_2012.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'])
+        
+        self.weather_2011 = self.weather_2011.groupby(['DATE'], as_index = False).mean()
+        self.weather_2012 = self.weather_2012.groupby(['DATE'], as_index = False).mean()
+        
+        normalize (self.weather_2011, 'TEMPERATURE_LOW')
+        normalize (self.weather_2011, 'TEMPERATURE_HIGH')
+        normalize (self.weather_2011, 'PRESSURE')
+        normalize (self.weather_2011, 'PRECIP')
+        
+        normalize (self.weather_2012, 'TEMPERATURE_LOW')
+        normalize (self.weather_2012, 'TEMPERATURE_HIGH')
+        normalize (self.weather_2012, 'PRESSURE')
+        normalize (self.weather_2012, 'PRECIP')
+        
+#        moyenne_precipitation = self.weather_2011['PRECIP'].mean()
+#        var_precipitation = (((self.weather_2011['PRECIP'] - moyenne_precipitation)**2).mean())**0.5
+#        self.weather_2011['PRECIP_NORM'] = self.weather_2011['PRECIP'].apply(lambda pre: (pre - moyenne_precipitation)/(var_precipitation))
+        
+        
     def add_day_off(self):
         self.data['YEAR_DAY_AND_YEAR'] = self.data['DATE'].apply(lambda date: get_year_day(date))
         self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0], date[1]))
@@ -105,4 +128,6 @@ if __name__ == "__main__":
     loader.add_day_off()
     loader.data.to_csv('../../data/preprocessed_data.csv', sep=";")
     loader.add_weather_data()
-    weather_2011=loader.weather_2011
+    loaded_data = loader.data
+    weather_2012 = loader.weather_2012
+    weather_2011 = loader.weather_2011
