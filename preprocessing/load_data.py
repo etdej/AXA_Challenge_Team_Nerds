@@ -77,7 +77,7 @@ def find_day_off(year_day, year):
 class load_data:
 
     def __init__(self):
-        data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns, nrows=100000)
+        data = pd.read_csv("../../data/train_2011_2012.csv", sep=";", usecols = CONFIG.useful_columns, nrows=1000)
         print(data.columns)
         week_day = data['DAY_WE_DS'].map(lambda day: find_day(day))
         data['WEEK_DAY'] = week_day
@@ -90,7 +90,10 @@ class load_data:
         self.data = data.groupby(['DATE', 'ASS_ID', 'DAY_OFF', 'WEEK_DAY'], sort=False).sum().reset_index()
         print(self.data.columns)
 
-
+    def add_weather_data(self):
+        self.weather_2011 = pd.read_csv("../../data/meteo/meteo_2011.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'], nrows=100)
+        self.weather_2012 = pd.read_csv("../../data/meteo/meteo_2012.csv", index_col=False, names=[ 'DATE', 'DEPT', 'CITY', 'TEMPERATURE_LOW', 'TEMPERATURE_HIGH', 'WIND_DIR', 'PRECIP', 'PRESSURE'], nrows=100)
+    
     def add_day_off(self):
         self.data['YEAR_DAY_AND_YEAR'] = self.data['DATE'].apply(lambda date: get_year_day(date))
         self.data['DAY_DS'] = self.data['YEAR_DAY_AND_YEAR'].apply(lambda date: find_day_off(date[0], date[1]))
@@ -101,3 +104,5 @@ if __name__ == "__main__":
     loader = load_data()
     loader.add_day_off()
     loader.data.to_csv('../../data/preprocessed_data.csv', sep=";")
+    loader.add_weather_data()
+    weather_2011=loader.weather_2011
